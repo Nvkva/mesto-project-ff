@@ -1,4 +1,3 @@
-const cards = initialCards;
 // @todo: Темплейт карточки
 
 // @todo: DOM узлы
@@ -24,14 +23,13 @@ function createCard(cardData, cb) {
 
 // @todo: Функция удаления карточки
 function deleteCard(cardTemplate, cardData) {
-  let cardToDelete = cards.find(card => card.name === cardData.name);
-  
+  let cardToDelete = initialCards.find(card => card.name === cardData.name);
+  let index = initialCards.indexOf(cardToDelete);
+  initialCards.splice(index, 1);
   cardTemplate.remove();
-  
 }
 
-
 // @todo: Вывести карточки на страницу
-cards.forEach(cardData => {
+initialCards.forEach(cardData => {
   createCard(cardData, deleteCard);
 });
