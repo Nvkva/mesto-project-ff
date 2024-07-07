@@ -18,7 +18,7 @@ function createCard(cardData, deleteCallback) {
     deleteCallback(cardElement);
   });
 
-  cardContent.append(cardElement);
+  return cardElement;
 }
 
 // @todo: Функция удаления карточки
@@ -28,5 +28,6 @@ function deleteCard(cardTemplate) {
 
 // @todo: Вывести карточки на страницу
 initialCards.forEach(cardData => {
-  createCard(cardData, deleteCard);
+  const cardElement = createCard(cardData, deleteCard);
+  cardContent.append(cardElement);
 });
