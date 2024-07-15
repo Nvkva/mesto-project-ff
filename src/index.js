@@ -31,3 +31,6 @@ initialCards.forEach(cardData => {
   const cardElement = createCard(cardData, deleteCard);
   cardContent.append(cardElement);
 });
+
+
+console.log('Hello, World!');
