@@ -1,3 +1,6 @@
+import '../pages/index.css'
+import { initialCards } from './cards.js';
+
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
 
@@ -34,3 +37,4 @@ initialCards.forEach(cardData => {
 
 
 console.log('Hello, World!');
+
