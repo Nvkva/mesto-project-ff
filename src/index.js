@@ -8,6 +8,16 @@ const cardTemplate = document.querySelector('#card-template').content;
 const content = document.querySelector('.content');
 const cardContent = content.querySelector('.places__list');
 
+// устанавливаем триггер для модального окна (название можно изменить)
+const editButton = document.getElementsByClassName("profile__edit-button")[0];
+const editDialog = document.getElementsByClassName("popup_type_edit")[0];
+const createCardButton = document.getElementsByClassName("profile__add-button")[0];
+const createCardDialog = document.getElementsByClassName("popup_type_new-card")[0];
+// const createCardButton = document.getElementsByClassName("profile__add-button")[0];
+// const createCardDialog = document.getElementsByClassName("popup_type_image")[0];
+
+
+
 // @todo: Функция создания карточки
 function createCard(cardData, deleteCallback) {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
@@ -35,6 +45,30 @@ initialCards.forEach(cardData => {
   cardContent.append(cardElement);
 });
 
+// событие нажатия на триггер открытия модального окна
+editButton.addEventListener("click", function () {
+  // делаем модальное окно видимым
+  editDialog.classList.add('popup_is-opened');
+  const closeButton = editDialog.getElementsByClassName("popup__close")[0];
+  closeButton.addEventListener("click", function () {
+    editDialog.classList.remove('popup_is-opened');
+  });
 
-console.log('Hello, World!');
+  editDialog.addEventListener("click", function () {
+    editDialog.classList.remove('popup_is-opened');
+  });
+});
 
+// событие нажатия на триггер открытия модального окна
+createCardButton.addEventListener("click", function () {
+  // делаем модальное окно видимым
+  createCardDialog.classList.add('popup_is-opened');
+  const closeButton = createCardDialog.getElementsByClassName("popup__close")[0];
+  closeButton.addEventListener("click", function () {
+    createCardDialog.classList.remove('popup_is-opened');
+  });
+
+  createCardDialog.addEventListener("click", function () {
+    createCardDialog.classList.remove('popup_is-opened');
+  });  
+});
