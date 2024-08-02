@@ -10,6 +10,10 @@ const cardContent = content.querySelector('.places__list');
 
 const editButton = document.getElementsByClassName("profile__edit-button")[0];  // Кнопка редактирования модального окна
 const editDialog = document.getElementsByClassName("popup_type_edit")[0]; // Модальное окно редактирования
+const editingForm = editDialog.querySelector(".popup__form");
+const editJobInput = editDialog.querySelector(".popup__input_type_description");
+const editNameInput = editDialog.querySelector(".popup__input_type_name");
+
 const createCardButton = document.getElementsByClassName("profile__add-button")[0]; // Кнопка добавления карточки
 const createCardDialog = document.getElementsByClassName("popup_type_new-card")[0]; // Модальное окно добавления карточки
 
@@ -49,33 +53,17 @@ initialCards.forEach(cardData => {
 editButton.addEventListener("click", function () {
   editDialog.classList.add('popup_is-opened'); // Добавляем класс
 
-  const formElement = editDialog.querySelector(".popup__form");
-  const jobInput = editDialog.querySelector(".popup__input_type_description");
-  const nameInput = editDialog.querySelector(".popup__input_type_name");
-  nameInput.value = profileTitle.textContent;
-  jobInput.value = profileDescription.textContent;
-  
-  formElement.addEventListener('submit', (evt) => {
-    handleFormSubmit(evt, nameInput, jobInput);
-    editDialog.classList.remove('popup_is-opened');
-  });
+  editNameInput.value = profileTitle.textContent;
+  editJobInput.value = profileDescription.textContent;
+
+  editingForm.addEventListener('submit', handleEditing);
 
   const closeButton = editDialog.getElementsByClassName("popup__close")[0]; // Нашли класс кнопки крестика
-  closeButton.addEventListener("click", function () {
-    editDialog.classList.remove('popup_is-opened');
-  }); // Удаляем класс по нажаттию на крестик
+  closeButton.addEventListener("click", closeEditDialog); // Удаляем класс по нажаттию на крестик
 
-  editDialog.addEventListener("click", function (evt) {
-    if (event.target === editDialog) {
-      editDialog.classList.remove('popup_is-opened');
-    }
-  }); // Удаляем класс по нажаттию оверлей
+  editDialog.addEventListener("click", closeEditDialogByOverlay); // Удаляем класс по нажаттию оверлей
 
-  document.addEventListener('keydown', function (evt) {
-    if (evt.key === 'Escape') {
-      editDialog.classList.remove('popup_is-opened');
-    }
-    }); // Удаляем класс по нажаттию ESC
+  document.addEventListener('keydown', closeEditDialogByEsc); // Удаляем класс по нажаттию ESC
 });
 
 // Событие нажатия на кнопку открытия модального окна добавления карточки
@@ -91,21 +79,39 @@ createCardButton.addEventListener("click", function () {
   createCardDialog.addEventListener("click", function () {
     createCardDialog.classList.remove('popup_is-opened');
   });  // Удаляем класс по нажаттию оверлей
-  
+
   document.addEventListener('keydown', function (evt) {
     if (evt.key === 'Escape') {
       createCardDialog.classList.remove('popup_is-opened');
     }
-    });  // Удаляем класс по нажаттию ESC
+  });  // Удаляем класс по нажаттию ESC
 });
 
 // // Обработчик «отправки» формы, хотя пока
 // // она никуда отправляться не будет
-function handleFormSubmit(evt, nameInput, jobInput) {
-    evt.preventDefault();
-    const name = nameInput.value;
-    const job = jobInput.value;
+function handleEditing(evt) {
+  evt.preventDefault();
+  const name = editNameInput.value;
+  const job = editJobInput.value;
 
-    profileTitle.textContent = name;
-    profileDescription.textContent = job;
+  profileTitle.textContent = name;
+  profileDescription.textContent = job;
+
+  editDialog.classList.remove('popup_is-opened');
+}
+
+function closeEditDialog() {
+  editDialog.classList.remove('popup_is-opened');
+}
+
+function closeEditDialogByOverlay(evt) {
+  if (event.target === editDialog) {
+    closeEditDialog();
   }
+}
+
+function closeEditDialogByEsc(evt) {
+  if (evt.key === 'Escape') {
+    closeEditDialog();
+  }
+}
