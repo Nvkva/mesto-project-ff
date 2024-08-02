@@ -49,10 +49,16 @@ initialCards.forEach(cardData => {
 editButton.addEventListener("click", function () {
   editDialog.classList.add('popup_is-opened'); // Добавляем класс
 
+  const formElement = editDialog.querySelector(".popup__form");
   const jobInput = editDialog.querySelector(".popup__input_type_description");
   const nameInput = editDialog.querySelector(".popup__input_type_name");
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
+  
+  formElement.addEventListener('submit', (evt) => {
+    handleFormSubmit(evt, nameInput, jobInput);
+    editDialog.classList.remove('popup_is-opened');
+  });
 
   const closeButton = editDialog.getElementsByClassName("popup__close")[0]; // Нашли класс кнопки крестика
   closeButton.addEventListener("click", function () {
@@ -75,46 +81,31 @@ editButton.addEventListener("click", function () {
 // Событие нажатия на кнопку открытия модального окна добавления карточки
 createCardButton.addEventListener("click", function () {
   createCardDialog.classList.add('popup_is-opened'); // Добавляем класс
+
+
   const closeButton = createCardDialog.getElementsByClassName("popup__close")[0]; // Нашли класс кнопки крестика
   closeButton.addEventListener("click", function () {
     createCardDialog.classList.remove('popup_is-opened');
   }); // Удаляем класс по нажаттию на крестик
+
   createCardDialog.addEventListener("click", function () {
     createCardDialog.classList.remove('popup_is-opened');
   });  // Удаляем класс по нажаттию оверлей
+  
   document.addEventListener('keydown', function (evt) {
-    console.log(evt);
     if (evt.key === 'Escape') {
       createCardDialog.classList.remove('popup_is-opened');
     }
     });  // Удаляем класс по нажаттию ESC
 });
 
-  
-// // Находим форму в DOM
-// const formElement = editDialog.querySelector("popup__form");
-
 // // Обработчик «отправки» формы, хотя пока
 // // она никуда отправляться не будет
-// function handleFormSubmit(evt) {
-//     evt.preventDefault();
-//     const name = nameInput.value;
-//     const job = jobInput.value;
+function handleFormSubmit(evt, nameInput, jobInput) {
+    evt.preventDefault();
+    const name = nameInput.value;
+    const job = jobInput.value;
 
-//     profileTitle.textContent = name;
-//     profileDescription.textContent = job;
-  
-//   }// Эта строчка отменяет стандартную отправку формы.
-//                                                 // Так мы можем определить свою логику отправки.
-//                                                 // О том, как это делать, расскажем позже.
-
-//     // Получите значение полей jobInput и nameInput из свойства value
-
-//     // Выберите элементы, куда должны быть вставлены значения полей
-
-//     // Вставьте новые значения с помощью textContent
-
-
-// // Прикрепляем обработчик к форме:
-// // он будет следить за событием “submit” - «отправка»
-// formElement.addEventListener('submit', handleFormSubmit); 
+    profileTitle.textContent = name;
+    profileDescription.textContent = job;
+  }
