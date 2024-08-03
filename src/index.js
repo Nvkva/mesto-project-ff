@@ -29,12 +29,12 @@ const cardImageLabel = imageDialog.getElementsByClassName("popup__caption")[0];
 
 const popups = document.getElementsByClassName("popup");
 for (let item of popups) {
-    item.classList.add("popup_is-animated");
+  item.classList.add("popup_is-animated");
 }
 
 
 // @todo: Функция создания карточки
-function createCard(cardData, deleteCallback, likeCallback) {
+function createCard(cardData, deleteCallback, likeCallback, previewCallback) {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
   const cardImage = cardElement.querySelector('.card__image');
   cardImage.setAttribute('src', cardData.link);
@@ -52,12 +52,7 @@ function createCard(cardData, deleteCallback, likeCallback) {
   });
 
   cardImage.addEventListener('click', () => {
-    imageDialog.classList.add('popup_is-opened');
-    const closeButton = imageDialog.getElementsByClassName("popup__close")[0]; // Нашли класс кнопки крестика
-    closeButton.addEventListener("click", closeImageDialog); // Удаляем класс по нажаттию на крестика
-    cardImageTemplate.src = cardData.link;
-    cardImageLabel.textContent = cardData.name
-
+    previewCallback(imageDialog, cardData);
   });
 
   return cardElement;
@@ -76,9 +71,17 @@ function likeCard(likeButton) {
   }
 }
 
+function previewImage(imageDialog, cardData) {
+  imageDialog.classList.add('popup_is-opened');
+  const closeButton = imageDialog.getElementsByClassName("popup__close")[0]; // Нашли класс кнопки крестика
+  closeButton.addEventListener("click", closeImageDialog); // Удаляем класс по нажаттию на крестика
+  cardImageTemplate.src = cardData.link;
+  cardImageLabel.textContent = cardData.name
+}
+
 // @todo: Вывести карточки на страницу
 initialCards.forEach(cardData => {
-  const cardElement = createCard(cardData, deleteCard, likeCard);
+  const cardElement = createCard(cardData, deleteCard, likeCard, previewImage);
   cardContent.append(cardElement);
 });
 
