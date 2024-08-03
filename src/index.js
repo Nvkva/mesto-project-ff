@@ -16,14 +16,16 @@ const editNameInput = editDialog.querySelector(".popup__input_type_name");
 
 const createCardButton = document.getElementsByClassName("profile__add-button")[0]; // Кнопка добавления карточки
 const createCardDialog = document.getElementsByClassName("popup_type_new-card")[0]; // Модальное окно добавления карточки
+const creationForm = createCardDialog.querySelector(".popup__form");
+const createUrlInput = createCardDialog.querySelector(".popup__input_type_url");
+const createNameInput = createCardDialog.querySelector(".popup__input_type_card-name");
 
 const profileTitle = document.getElementsByClassName("profile__title")[0];
 const profileDescription = document.getElementsByClassName("profile__description")[0];
 
 
-
 // @todo: Функция создания карточки
-function createCard(cardData, deleteCallback) {
+function createCard(cardData, deleteCallback, likeCallback) {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
   const cardImage = cardElement.querySelector('.card__image');
   cardImage.setAttribute('src', cardData.link);
@@ -35,6 +37,10 @@ function createCard(cardData, deleteCallback) {
     deleteCallback(cardElement);
   });
 
+  const likeButton = cardElement.querySelector('.card__like-button');
+  likeButton.addEventListener('click', () => {
+    likeCallback(likeButton);
+  });
   return cardElement;
 }
 
@@ -43,9 +49,18 @@ function deleteCard(cardTemplate) {
   cardTemplate.remove();
 }
 
+function likeCard(likeButton) {
+  if (likeButton.classList.contains('card__like-button_is-active')) {
+    likeButton.classList.remove('card__like-button_is-active')
+  } else {
+    likeButton.classList.add('card__like-button_is-active'); 
+  }
+  
+}
+
 // @todo: Вывести карточки на страницу
 initialCards.forEach(cardData => {
-  const cardElement = createCard(cardData, deleteCard);
+  const cardElement = createCard(cardData, deleteCard, likeCard);
   cardContent.append(cardElement);
 });
 
@@ -70,21 +85,14 @@ editButton.addEventListener("click", function () {
 createCardButton.addEventListener("click", function () {
   createCardDialog.classList.add('popup_is-opened'); // Добавляем класс
 
+  creationForm.addEventListener('submit', handleCreation);
 
   const closeButton = createCardDialog.getElementsByClassName("popup__close")[0]; // Нашли класс кнопки крестика
-  closeButton.addEventListener("click", function () {
-    createCardDialog.classList.remove('popup_is-opened');
-  }); // Удаляем класс по нажаттию на крестик
+  closeButton.addEventListener("click", closeCreateDialog); // Удаляем класс по нажаттию на крестик
 
-  createCardDialog.addEventListener("click", function () {
-    createCardDialog.classList.remove('popup_is-opened');
-  });  // Удаляем класс по нажаттию оверлей
+  createCardDialog.addEventListener("click", closeCreateDialogByOverlay);  // Удаляем класс по нажаттию оверлей
 
-  document.addEventListener('keydown', function (evt) {
-    if (evt.key === 'Escape') {
-      createCardDialog.classList.remove('popup_is-opened');
-    }
-  });  // Удаляем класс по нажаттию ESC
+  document.addEventListener('keydown', closeCreateDialogByEsc);  // Удаляем класс по нажаттию ESC
 });
 
 // // Обработчик «отправки» формы, хотя пока
@@ -100,6 +108,25 @@ function handleEditing(evt) {
   editDialog.classList.remove('popup_is-opened');
 }
 
+function handleCreation(evt) {
+  evt.preventDefault();
+  const name = createNameInput.value;
+  const url = createUrlInput.value;
+
+  const newCardData = {
+    name: name,
+    link: url,
+  };
+
+  const cardElement = createCard(newCardData, deleteCard, likeCard);
+  cardContent.prepend(cardElement);
+
+  createNameInput.value = "";
+  createUrlInput.value = "";
+
+  createCardDialog.classList.remove('popup_is-opened');
+}
+
 function closeEditDialog() {
   editDialog.classList.remove('popup_is-opened');
 }
@@ -113,5 +140,21 @@ function closeEditDialogByOverlay(evt) {
 function closeEditDialogByEsc(evt) {
   if (evt.key === 'Escape') {
     closeEditDialog();
+  }
+}
+
+function closeCreateDialog() {
+  createCardDialog.classList.remove('popup_is-opened');
+}; // Удаляем класс по нажаттию на крестик
+
+function closeCreateDialogByOverlay() {
+  if (event.target === createCardDialog) {
+    closeCreateDialog();
+  }
+}
+
+function closeCreateDialogByEsc(evt) {
+  if (evt.key === 'Escape') {
+    createCardDialog.classList.remove('popup_is-opened');
   }
 }
