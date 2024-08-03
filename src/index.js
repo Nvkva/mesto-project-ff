@@ -23,6 +23,15 @@ const createNameInput = createCardDialog.querySelector(".popup__input_type_card-
 const profileTitle = document.getElementsByClassName("profile__title")[0];
 const profileDescription = document.getElementsByClassName("profile__description")[0];
 
+const imageDialog = document.getElementsByClassName("popup_type_image")[0];
+const cardImageTemplate = imageDialog.getElementsByClassName("popup__image")[0];
+const cardImageLabel = imageDialog.getElementsByClassName("popup__caption")[0];
+
+const popups = document.getElementsByClassName("popup");
+for (let item of popups) {
+    item.classList.add("popup_is-animated");
+}
+
 
 // @todo: Функция создания карточки
 function createCard(cardData, deleteCallback, likeCallback) {
@@ -41,6 +50,16 @@ function createCard(cardData, deleteCallback, likeCallback) {
   likeButton.addEventListener('click', () => {
     likeCallback(likeButton);
   });
+
+  cardImage.addEventListener('click', () => {
+    imageDialog.classList.add('popup_is-opened');
+    const closeButton = imageDialog.getElementsByClassName("popup__close")[0]; // Нашли класс кнопки крестика
+    closeButton.addEventListener("click", closeImageDialog); // Удаляем класс по нажаттию на крестика
+    cardImageTemplate.src = cardData.link;
+    cardImageLabel.textContent = cardData.name
+
+  });
+
   return cardElement;
 }
 
@@ -53,9 +72,8 @@ function likeCard(likeButton) {
   if (likeButton.classList.contains('card__like-button_is-active')) {
     likeButton.classList.remove('card__like-button_is-active')
   } else {
-    likeButton.classList.add('card__like-button_is-active'); 
+    likeButton.classList.add('card__like-button_is-active');
   }
-  
 }
 
 // @todo: Вывести карточки на страницу
@@ -158,3 +176,7 @@ function closeCreateDialogByEsc(evt) {
     createCardDialog.classList.remove('popup_is-opened');
   }
 }
+
+function closeImageDialog() {
+  imageDialog.classList.remove('popup_is-opened');
+}; // Удаляем класс по нажаттию на крестик
