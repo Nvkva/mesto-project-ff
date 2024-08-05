@@ -1,2 +1,2 @@
-# Проектная работа Mesto
+git@github.com:Nvkva/mesto-project-ff.git
 
