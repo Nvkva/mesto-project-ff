@@ -1,7 +1,7 @@
-import '../pages/index.css'
+import './pages/index.css'
 import { initialCards } from './cards.js';
-import { createCard, deleteCard, likeCard} from './components/card.js';
-import { handleEditing, handleCreation, closeDialog, closeDialogByEsc, openDialog, closeDialogByOverlay } from './components/modal.js';
+import { createCard, deleteCard, likeCard } from './components/card.js';
+import { closeDialog, openDialog, closeDialogByOverlay } from './components/modal.js';
 
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
@@ -10,25 +10,25 @@ const cardTemplate = document.querySelector('#card-template').content;
 const content = document.querySelector('.content');
 const cardContent = content.querySelector('.places__list');
 
-const editButton = document.getElementsByClassName("profile__edit-button")[0];  // Кнопка редактирования модального окна
-const editDialog = document.getElementsByClassName("popup_type_edit")[0]; // Модальное окно редактирования
-const editDialogCloseButton = editDialog.getElementsByClassName("popup__close")[0]; // Нашли класс кнопки крестика
-const editingForm = editDialog.querySelector(".popup__form");
+const editButton = document.querySelector(".profile__edit-button");  // Кнопка редактирования модального окна
+const editDialog = document.querySelector(".popup_type_edit"); // Модальное окно редактирования
+const editDialogCloseButton = editDialog.querySelector(".popup__close"); // Нашли класс кнопки крестика
+const editingForm = document.forms["edit-profile"];
 const editJobInput = editDialog.querySelector(".popup__input_type_description");
 const editNameInput = editDialog.querySelector(".popup__input_type_name");
 
-const createCardButton = document.getElementsByClassName("profile__add-button")[0]; // Кнопка добавления карточки
-const createCardDialog = document.getElementsByClassName("popup_type_new-card")[0]; // Модальное окно добавления карточки
-const createCardCloseButton = createCardDialog.getElementsByClassName("popup__close")[0]; // Нашли класс кнопки крестика
-const creationForm = createCardDialog.querySelector(".popup__form");
+const createCardButton = document.querySelector(".profile__add-button"); // Кнопка добавления карточки
+const createCardDialog = document.querySelector(".popup_type_new-card"); // Модальное окно добавления карточки
+const createCardCloseButton = createCardDialog.querySelector(".popup__close"); // Нашли класс кнопки крестика
+const creationForm = document.forms["new-place"];
 
-const profileTitle = document.getElementsByClassName("profile__title")[0];
-const profileDescription = document.getElementsByClassName("profile__description")[0];
+const profileTitle = document.querySelector(".profile__title");
+const profileDescription = document.querySelector(".profile__description");
 
-const imageDialog = document.getElementsByClassName("popup_type_image")[0];
-const imageTemplate = imageDialog.getElementsByClassName("popup__image")[0];
-const labelTemplate = imageDialog.getElementsByClassName("popup__caption")[0];
-const imageCloseButton = imageDialog.getElementsByClassName("popup__close")[0];
+const imageDialog = document.querySelector(".popup_type_image");
+const imageTemplate = imageDialog.querySelector(".popup__image");
+const labelTemplate = imageDialog.querySelector(".popup__caption");
+const imageCloseButton = imageDialog.querySelector(".popup__close");
 
 const popups = document.getElementsByClassName("popup");
 
@@ -36,12 +36,46 @@ export function previewImage(cardData) {
   openDialog(imageDialog);
 
   imageTemplate.src = cardData.link;
+  imageTemplate.alt = cardData.name;
   labelTemplate.textContent = cardData.name
 }
 
+function handleEditing(evt) {
+  evt.preventDefault();
+
+  const name = editNameInput.value;
+  const job = editJobInput.value;
+
+  profileTitle.textContent = name;
+  profileDescription.textContent = job;
+
+  closeDialog(editDialog);
+}
+
+function handleCreation(evt) {
+  evt.preventDefault();
+  const createUrlInput = createCardDialog.querySelector(".popup__input_type_url");
+  const createNameInput = createCardDialog.querySelector(".popup__input_type_card-name");
+  const name = createNameInput.value;
+  const url = createUrlInput.value;
+
+  const cardData = {
+    name: name,
+    link: url,
+  };
+
+  const cardElement = createCard({ cardTemplate, cardData, deleteCard, likeCard, previewImage });
+  cardContent.prepend(cardElement);
+
+  evt.target.reset();
+
+  closeDialog(createCardDialog);
+}
+
+
 // @todo: Вывести карточки на страницу
 initialCards.forEach(cardData => {
-  const cardElement = createCard(cardTemplate, cardData, deleteCard, likeCard, previewImage);
+  const cardElement = createCard({ cardTemplate, cardData, deleteCard, likeCard, previewImage });
   cardContent.append(cardElement);
 });
 
@@ -49,7 +83,9 @@ for (let item of popups) {
   item.classList.add("popup_is-animated");
 }
 
-imageCloseButton.addEventListener("click", () => closeDialog(imageDialog)); // Удаляем класс по нажаттию на крестика
+imageCloseButton.addEventListener("click", () => closeDialog(imageDialog)); // Удаляем класс по нажатию на крестика
+imageDialog.addEventListener("click", (event) => closeDialogByOverlay(event, imageDialog)); // Удаляем класс по нажатию оверлей
+
 
 // Событие нажатия на кнопку открытия модального окна редактирования
 editButton.addEventListener("click", function () {
@@ -58,24 +94,16 @@ editButton.addEventListener("click", function () {
   editNameInput.value = profileTitle.textContent;
   editJobInput.value = profileDescription.textContent;
 
-  editingForm.addEventListener('submit', (evt) => handleEditing(
-    evt,
-    editDialog,
-    profileTitle,
-    profileDescription,
-  ), { once: true });
-
-  document.addEventListener('keydown', (event) => closeDialogByEsc(event, editDialog), { once: true }); // Удаляем класс по нажаттию ESC
 });
-editDialogCloseButton.addEventListener("click", () => closeDialog(editDialog)); // Удаляем класс по нажаттию на крестик
-editDialog.addEventListener("click", (event) => closeDialogByOverlay(event, editDialog)); // Удаляем класс по нажаттию оверлей
+editingForm.addEventListener('submit', handleEditing);
+editDialogCloseButton.addEventListener("click", () => closeDialog(editDialog)); // Удаляем класс по нажатию на крестик
+editDialog.addEventListener("click", (event) => closeDialogByOverlay(event, editDialog)); // Удаляем класс по нажатию оверлей
 
 // Событие нажатия на кнопку открытия модального окна добавления карточки
 createCardButton.addEventListener("click", function () {
   openDialog(createCardDialog);
-  document.addEventListener('keydown', (event) => closeDialogByEsc(event, createCardDialog), { once: true });  // Удаляем класс по нажаттию ESC
-  creationForm.addEventListener('submit', (evt) => handleCreation(evt, createCardDialog, cardContent, cardTemplate, imageDialog), { once: true });
 });
-createCardCloseButton.addEventListener("click", () => closeDialog(createCardDialog)); // Удаляем класс по нажаттию на крестик
-createCardDialog.addEventListener("click", (event) => closeDialogByOverlay(event, createCardDialog));  // Удаляем класс по нажаттию оверлей
+creationForm.addEventListener('submit', handleCreation);
+createCardCloseButton.addEventListener("click", () => closeDialog(createCardDialog)); // Удаляем класс по нажатию на крестик
+createCardDialog.addEventListener("click", (event) => closeDialogByOverlay(event, createCardDialog));  // Удаляем класс по нажатию оверлей
 
