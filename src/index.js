@@ -1,6 +1,6 @@
 import '../pages/index.css'
 import { initialCards } from './cards.js';
-import { createCard, deleteCard, likeCard, previewImage } from './components/card.js';
+import { createCard, deleteCard, likeCard} from './components/card.js';
 import { handleEditing, handleCreation, closeDialog, closeDialogByEsc, openDialog, closeDialogByOverlay } from './components/modal.js';
 
 // @todo: Темплейт карточки
@@ -26,17 +26,30 @@ const profileTitle = document.getElementsByClassName("profile__title")[0];
 const profileDescription = document.getElementsByClassName("profile__description")[0];
 
 const imageDialog = document.getElementsByClassName("popup_type_image")[0];
+const imageTemplate = imageDialog.getElementsByClassName("popup__image")[0];
+const labelTemplate = imageDialog.getElementsByClassName("popup__caption")[0];
+const imageCloseButton = imageDialog.getElementsByClassName("popup__close")[0];
+
+const popups = document.getElementsByClassName("popup");
+
+export function previewImage(cardData) {
+  openDialog(imageDialog);
+
+  imageTemplate.src = cardData.link;
+  labelTemplate.textContent = cardData.name
+}
 
 // @todo: Вывести карточки на страницу
 initialCards.forEach(cardData => {
-  const cardElement = createCard(cardTemplate, cardData, imageDialog, deleteCard, likeCard, previewImage);
+  const cardElement = createCard(cardTemplate, cardData, deleteCard, likeCard, previewImage);
   cardContent.append(cardElement);
 });
 
-const popups = document.getElementsByClassName("popup");
 for (let item of popups) {
   item.classList.add("popup_is-animated");
 }
+
+imageCloseButton.addEventListener("click", () => closeDialog(imageDialog)); // Удаляем класс по нажаттию на крестика
 
 // Событие нажатия на кнопку открытия модального окна редактирования
 editButton.addEventListener("click", function () {

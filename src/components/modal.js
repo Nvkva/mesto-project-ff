@@ -1,6 +1,8 @@
 // // Обработчик «отправки» формы, хотя пока
 
-import { createCard, deleteCard, likeCard, previewImage } from "./card";
+import { previewImage } from "..";
+import { createCard, deleteCard, likeCard } from "./card";
+
 
 // // она никуда отправляться не будет
 export function handleEditing(
@@ -40,7 +42,7 @@ export function handleCreation(
     link: url,
   };
 
-  const cardElement = createCard(cardTemplate, newCardData, imageDialog, deleteCard, likeCard, previewImage);
+  const cardElement = createCard(cardTemplate, newCardData, deleteCard, likeCard, previewImage);
   cardContent.prepend(cardElement);
 
   createNameInput.value = "";
