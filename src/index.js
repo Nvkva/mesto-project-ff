@@ -101,6 +101,8 @@ editDialog.addEventListener("click", (event) => closeDialogByOverlay(event, edit
 
 // Событие нажатия на кнопку открытия модального окна добавления карточки
 createCardButton.addEventListener("click", function () {
+  creationForm.reset();
+
   clearValidationForForm(creationForm);
   openDialog(createCardDialog);
 });

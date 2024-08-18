@@ -113,20 +113,30 @@
         >
           <input
             type="text"
+            id="place-name-input"
             name="place-name"
             class="popup__input popup__input_type_card-name"
             placeholder="Название"
             required
             minlength="2"
             maxlength="30"
+            pattern="^[a-zA-Zа-яА-ЯёЁ\s\-]+$"
+            data-error-message="Поле может содержать только латинские и кириллические буквы, знаки дефиса и пробелы"
           >
+          <div class="form__input-error-container">
+            <span class="place-name-input-error form__input-error"></span>
+          </div>
           <input
             type="url"
+            id="link-input"
             name="link"
             class="popup__input popup__input_type_url"
             placeholder="Ссылка на картинку"
             required
           >
+          <div class="form__input-error-container">
+            <span class="link-input-error form__input-error"></span>
+          </div>
           <button
             type="submit"
             class="button popup__button"
