@@ -137,7 +137,7 @@ const isValid = (formElement, inputElement) => {
   if (inputElement.validity.patternMismatch) {
     // встроенный метод setCustomValidity принимает на вход строку
     // и заменяет ею стандартное сообщение об ошибке
-    inputElement.setCustomValidity("Разрешены только латинские буквы.");
+    inputElement.setCustomValidity(inputElement.dataset.errorMessage);
   } else {
     // если передать пустую строку, то будут доступны
     // стандартные браузерные сообщения

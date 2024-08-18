@@ -17,3 +17,7 @@
   opacity: 0;
   transition: 0.3s;
 }
+
+.form__input-error-container {
+  position: relative;
+}
