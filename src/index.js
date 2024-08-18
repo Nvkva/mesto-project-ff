@@ -89,11 +89,11 @@ imageDialog.addEventListener("click", (event) => closeDialogByOverlay(event, ima
 
 // Событие нажатия на кнопку открытия модального окна редактирования
 editButton.addEventListener("click", function () {
+  clearValidationForForm(editingForm);
   openDialog(editDialog);
 
   editNameInput.value = profileTitle.textContent;
   editJobInput.value = profileDescription.textContent;
-
 });
 editingForm.addEventListener('submit', handleEditing);
 editDialogCloseButton.addEventListener("click", () => closeDialog(editDialog)); // Удаляем класс по нажатию на крестик
@@ -101,6 +101,7 @@ editDialog.addEventListener("click", (event) => closeDialogByOverlay(event, edit
 
 // Событие нажатия на кнопку открытия модального окна добавления карточки
 createCardButton.addEventListener("click", function () {
+  clearValidationForForm(creationForm);
   openDialog(createCardDialog);
 });
 creationForm.addEventListener('submit', handleCreation);
@@ -168,6 +169,13 @@ const setEventListeners = (formElement) => {
       isValid(formElement, inputElement);
       toggleButtonState(inputList, buttonElement);
     });
+  });
+};
+
+const clearValidationForForm = (formElement) => {
+  const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
+  inputList.forEach((inputElement) => {
+    hideInputError(formElement, inputElement);
   });
 };
 

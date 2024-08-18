@@ -4,6 +4,7 @@ export function openDialog(dialog) {
 }
 
 export function closeDialog(dialog) {
+  
   dialog.classList.remove('popup_is-opened');
   document.removeEventListener('keydown', closeDialogByEsc); 
 }
