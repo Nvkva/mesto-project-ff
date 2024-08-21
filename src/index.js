@@ -166,7 +166,11 @@ const hasInvalidInput = (inputList) => {
   })
 };
 
-const clearValidationForForm = (formElement) => {
+const clearValidationForForm = (formElement, config) => {
+  const buttonElement = formElement.querySelector(config.submitButtonSelector);
+  buttonElement.disabled = true;
+  buttonElement.classList.add(config.inactiveButtonClass);
+
   const inputList = Array.from(formElement.querySelectorAll(validationConfig.inputSelector));
   inputList.forEach((inputElement) => {
     hideInputError({
@@ -195,7 +199,7 @@ imageDialog.addEventListener("click", (event) => closeDialogByOverlay(event, ima
 
 // Событие нажатия на кнопку открытия модального окна редактирования
 editButton.addEventListener("click", function () {
-  clearValidationForForm(editingForm);
+  clearValidationForForm(editingForm, validationConfig);
   openDialog(editDialog);
 
   editNameInput.value = profileTitle.textContent;
@@ -209,7 +213,7 @@ editDialog.addEventListener("click", (event) => closeDialogByOverlay(event, edit
 createCardButton.addEventListener("click", function () {
   creationForm.reset();
 
-  clearValidationForForm(creationForm);
+  clearValidationForForm(creationForm, validationConfig);
   openDialog(createCardDialog);
 });
 creationForm.addEventListener('submit', handleCreation);
