@@ -1,8 +1,8 @@
 import './pages/index.css'
-import { initialCards } from './cards.js';
 import { createCard, deleteCard, likeCard } from './components/card.js';
 import { closeDialog, openDialog, closeDialogByOverlay } from './components/modal.js';
 import { clearValidationForForm, enableValidation } from './components/validation.js';
+import { getCards, getCurrentUser } from './components/api.js';
 
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
@@ -25,6 +25,7 @@ const creationForm = document.forms["new-place"];
 
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
+const profileAvatar = document.querySelector(".profile__image");
 
 const imageDialog = document.querySelector(".popup_type_image");
 const imageTemplate = imageDialog.querySelector(".popup__image");
@@ -86,11 +87,24 @@ function handleCreation(evt) {
   closeDialog(createCardDialog);
 }
 
-// @todo: Вывести карточки на страницу
-initialCards.forEach(cardData => {
-  const cardElement = createCard({ cardTemplate, cardData, deleteCard, likeCard, previewImage });
-  cardContent.append(cardElement);
-});
+function initCards(cardsData) {
+  cardsData.forEach(cardData => {
+    const cardElement = createCard({ cardTemplate, cardData, deleteCard, likeCard, previewImage });
+    cardContent.append(cardElement);
+  });
+}
+
+function initUser(userData) {
+  profileTitle.textContent = userData.name;
+  profileDescription.textContent = userData.about;
+  profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
+}
+
+Promise.all([getCurrentUser(), getCards()])
+  .then(([userData, cardsData]) => {
+    initUser(userData);
+    initCards(cardsData);
+  });
 
 for (let item of popups) {
   item.classList.add("popup_is-animated");
