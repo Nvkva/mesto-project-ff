@@ -2,7 +2,7 @@ import './pages/index.css'
 import { createCard, deleteCard, likeCard } from './components/card.js';
 import { closeDialog, openDialog, closeDialogByOverlay } from './components/modal.js';
 import { clearValidationForForm, enableValidation } from './components/validation.js';
-import { getCards, getCurrentUser } from './components/api.js';
+import { editUser, getCards, getCurrentUser } from './components/api.js';
 
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
@@ -60,6 +60,9 @@ function handleEditing(evt) {
 
   const name = editNameInput.value;
   const job = editJobInput.value;
+
+  editUser(name, job)
+    .then(res => initUser(res));
 
   profileTitle.textContent = name;
   profileDescription.textContent = job;

@@ -21,7 +21,7 @@ export function getCards() {
 }
 
 export function editUser(name, about) {
-  return fetch(`${config.baseUrl}/cards`, {
+  return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
     headers: config.headers,
     body: JSON.stringify({
@@ -29,5 +29,5 @@ export function editUser(name, about) {
       about,
     })
   })
-    // .then(res => res.json())
+    .then(res => res.json())
 }
