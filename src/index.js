@@ -2,7 +2,7 @@ import './pages/index.css'
 import { createCard, deleteCard, likeCard } from './components/card.js';
 import { closeDialog, openDialog, closeDialogByOverlay } from './components/modal.js';
 import { clearValidationForForm, enableValidation } from './components/validation.js';
-import { editUser, getCards, getCurrentUser } from './components/api.js';
+import { addNewCard, editUser, getCards, getCurrentUser } from './components/api.js';
 
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
@@ -62,12 +62,13 @@ function handleEditing(evt) {
   const job = editJobInput.value;
 
   editUser(name, job)
-    .then(res => initUser(res));
+    .then(res => {
+      initUser(res);
+      profileTitle.textContent = name;
+      profileDescription.textContent = job;
 
-  profileTitle.textContent = name;
-  profileDescription.textContent = job;
-
-  closeDialog(editDialog);
+      closeDialog(editDialog);
+    });
 }
 
 function handleCreation(evt) {
@@ -77,17 +78,15 @@ function handleCreation(evt) {
   const name = createNameInput.value;
   const url = createUrlInput.value;
 
-  const cardData = {
-    name: name,
-    link: url,
-  };
+  addNewCard(name, url)
+    .then(res => {
+      const cardElement = createCard({ cardTemplate, cardData: res, deleteCard, likeCard, previewImage });
+      cardContent.prepend(cardElement);
 
-  const cardElement = createCard({ cardTemplate, cardData, deleteCard, likeCard, previewImage });
-  cardContent.prepend(cardElement);
+      evt.target.reset();
 
-  evt.target.reset();
-
-  closeDialog(createCardDialog);
+      closeDialog(createCardDialog);
+    });
 }
 
 function initCards(cardsData) {

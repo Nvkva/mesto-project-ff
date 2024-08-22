@@ -31,3 +31,15 @@ export function editUser(name, about) {
   })
     .then(res => res.json())
 }
+
+export function addNewCard(name, link) {
+  return fetch(`${config.baseUrl}/cards`, {
+    method: 'POST',
+    headers: config.headers,
+    body: JSON.stringify({
+      name,
+      link,
+    })
+  })
+    .then(res => res.json())
+}
