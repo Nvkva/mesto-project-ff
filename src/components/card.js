@@ -5,6 +5,7 @@ export function createCard(createData) {
   cardImage.setAttribute('src', createData.cardData.link);
   cardImage.setAttribute('alt', createData.cardData.name);
   cardElement.querySelector('.card__title').textContent = createData.cardData.name;
+  cardElement.querySelector('.card__like-count').textContent = createData.cardData.likes.length;
 
   const deleteButton = cardElement.querySelector('.card__delete-button');
   deleteButton.addEventListener('click', () => {
