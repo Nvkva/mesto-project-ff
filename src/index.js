@@ -4,6 +4,9 @@ import { closeDialog, openDialog, closeDialogByOverlay } from './components/moda
 import { clearValidationForForm, enableValidation } from './components/validation.js';
 import { addNewCard, editAvatar, editUser, getCards, getCurrentUser } from './components/api.js';
 
+const DEFAULT_SUBMIT_PROGRESS_LABEL = "Сохранение...";
+const DEFAULT_SUBMIT_LABEL = "Сохранить";
+
 let currentUserData;
 
 // @todo: Темплейт карточки
@@ -19,11 +22,13 @@ const editDialogCloseButton = editDialog.querySelector(".popup__close"); // На
 const editingForm = document.forms["edit-profile"];
 const editJobInput = editDialog.querySelector(".popup__input_type_description");
 const editNameInput = editDialog.querySelector(".popup__input_type_name");
+const editSubmitButton = editDialog.querySelector(".popup__button");
 
 const createCardButton = document.querySelector(".profile__add-button"); // Кнопка добавления карточки
 const createCardDialog = document.querySelector(".popup_type_new-card"); // Модальное окно добавления карточки
 const createCardCloseButton = createCardDialog.querySelector(".popup__close"); // Нашли класс кнопки крестика
 const creationForm = document.forms["new-place"];
+const createSubmitButton = createCardDialog.querySelector(".popup__button");
 
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
@@ -32,6 +37,7 @@ const profileAvatar = document.querySelector(".profile__image");
 const editAvatarDialog = document.querySelector(".popup_type_edit-avatar"); // Модальное окно добавления карточки
 const editAvatarCloseButton = editAvatarDialog.querySelector(".popup__close"); // Нашли класс кнопки крестика
 const avatarForm = document.forms["edit-avatar"];
+const editAvatarSubmitButton = editAvatarDialog.querySelector(".popup__button");
 
 const imageDialog = document.querySelector(".popup_type_image");
 const imageTemplate = imageDialog.querySelector(".popup__image");
@@ -42,6 +48,7 @@ const confirmationDialog = document.querySelector(".popup_confirmation");
 const confirmationCloseButton = confirmationDialog.querySelector(".popup__close");
 
 const popups = document.getElementsByClassName("popup");
+
 
 const validationConfig = {
   formSelector: '.popup__form',
@@ -66,13 +73,21 @@ function handleEditing(evt) {
   const name = editNameInput.value;
   const job = editJobInput.value;
 
+  editSubmitButton.textContent = DEFAULT_SUBMIT_PROGRESS_LABEL;
+
   editUser(name, job)
     .then(res => {
       initUser(res);
       profileTitle.textContent = name;
       profileDescription.textContent = job;
 
+      editSubmitButton.textContent = DEFAULT_SUBMIT_LABEL;
+
       closeDialog(editDialog);
+    })
+    .catch((err) => {
+      console.log(err);
+      editSubmitButton.textContent = DEFAULT_SUBMIT_LABEL;
     });
 }
 
@@ -83,6 +98,8 @@ function handleCreation(evt) {
   const name = createNameInput.value;
   const url = createUrlInput.value;
 
+  createSubmitButton.textContent = DEFAULT_SUBMIT_PROGRESS_LABEL;
+
   addNewCard(name, url)
     .then(res => {
       const cardElement = createCard({ confirmationDialog, cardTemplate, cardData: res, deleteCard, likeCard, previewImage });
@@ -90,12 +107,20 @@ function handleCreation(evt) {
 
       evt.target.reset();
 
+      createSubmitButton.textContent = DEFAULT_SUBMIT_LABEL;
+
       closeDialog(createCardDialog);
+    })
+    .catch((err) => {
+      console.log(err);
+      createSubmitButton.textContent = DEFAULT_SUBMIT_LABEL;
     });
 }
 
 function handleAvatarEdit(evt) {
   evt.preventDefault();
+
+  editAvatarSubmitButton.textContent = DEFAULT_SUBMIT_PROGRESS_LABEL;
 
   const createUrlInputValue = editAvatarDialog.querySelector(".popup__input_type_url").value;
   editAvatar(createUrlInputValue)
@@ -104,7 +129,13 @@ function handleAvatarEdit(evt) {
 
       evt.target.reset();
 
+      editAvatarSubmitButton.textContent = DEFAULT_SUBMIT_LABEL;
+
       closeDialog(editAvatarDialog);
+    })
+    .catch((err) => {
+      console.log(err);
+      editAvatarSubmitButton.textContent = DEFAULT_SUBMIT_LABEL;
     });
 }
 
@@ -126,6 +157,9 @@ Promise.all([getCurrentUser(), getCards()])
   .then(([userData, cardsData]) => {
     initUser(userData);
     initCards(cardsData);
+  })
+  .catch((err) => {
+    console.log(err);
   });
 
 for (let item of popups) {
@@ -158,7 +192,7 @@ createCardButton.addEventListener("click", function () {
 });
 creationForm.addEventListener('submit', handleCreation);
 createCardCloseButton.addEventListener("click", () => closeDialog(createCardDialog));
-createCardDialog.addEventListener("click", (event) => closeDialogByOverlay(event, createCardDialog)); 
+createCardDialog.addEventListener("click", (event) => closeDialogByOverlay(event, createCardDialog));
 
 profileAvatar.addEventListener("click", function () {
   avatarForm.reset();

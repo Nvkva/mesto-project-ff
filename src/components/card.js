@@ -1,4 +1,4 @@
-import { deleteCardRequest } from "./api";
+import { deleteCardRequest, dislikeCard, dislikeCardRequest, likeCardRequest } from "./api";
 import { openConfirmationDialog } from "./modal";
 
 // @todo: Функция создания карточки
@@ -22,7 +22,7 @@ export function createCard(createData) {
 
   const likeButton = cardElement.querySelector('.card__like-button');
   likeButton.addEventListener('click', () => {
-    createData.likeCard(likeButton);
+    createData.likeCard(likeButton, createData.cardData._id);
   });
 
   cardImage.addEventListener('click', () => {
@@ -38,8 +38,27 @@ export function deleteCard(cardTemplate, cardId) {
     .then(() => {
       cardTemplate.remove();
     })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
-export function likeCard(likeButton) {
-  likeButton.classList.toggle("card__like-button_is-active");
+export function likeCard(likeButton, cardId) {
+  if (likeButton.classList.contains('card__like-button_is-active')) {
+    dislikeCardRequest(cardId)
+      .then(() => {
+        likeButton.classList.toggle("card__like-button_is-active");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    likeCardRequest(cardId)
+      .then(() => {
+        likeButton.classList.toggle("card__like-button_is-active");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 }
