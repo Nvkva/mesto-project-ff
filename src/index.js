@@ -102,7 +102,7 @@ function handleCreation(evt) {
 
   addNewCard(name, url)
     .then(res => {
-      const cardElement = createCard({ confirmationDialog, cardTemplate, cardData: res, deleteCard, likeCard, previewImage });
+      const cardElement = createCard({ userId: currentUserData._id, confirmationDialog, cardTemplate, cardData: res, deleteCard, likeCard, previewImage });
       cardContent.prepend(cardElement);
 
       evt.target.reset();
