@@ -4,6 +4,8 @@ import { closeDialog, openDialog, closeDialogByOverlay } from './components/moda
 import { clearValidationForForm, enableValidation } from './components/validation.js';
 import { addNewCard, editUser, getCards, getCurrentUser } from './components/api.js';
 
+let currentUserData;
+
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
 
@@ -91,7 +93,7 @@ function handleCreation(evt) {
 
 function initCards(cardsData) {
   cardsData.forEach(cardData => {
-    const cardElement = createCard({ cardTemplate, cardData, deleteCard, likeCard, previewImage });
+    const cardElement = createCard({ userId: currentUserData._id, cardTemplate, cardData, deleteCard, likeCard, previewImage });
     cardContent.append(cardElement);
   });
 }
@@ -100,6 +102,7 @@ function initUser(userData) {
   profileTitle.textContent = userData.name;
   profileDescription.textContent = userData.about;
   profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
+  currentUserData = userData;
 }
 
 Promise.all([getCurrentUser(), getCards()])

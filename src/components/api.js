@@ -43,3 +43,36 @@ export function addNewCard(name, link) {
   })
     .then(res => res.json())
 }
+
+export function deleteCardRequest(cardId) {
+  return fetch(`${config.baseUrl}/cards/${cardId}`, {
+    method: 'DELETE',
+    headers: config.headers,
+    body: JSON.stringify({
+      _id: cardId
+    })
+  })
+    .then(res => res.json())
+}
+
+export function likeCard(cardId) {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: 'PUT',
+    headers: config.headers,
+    body: JSON.stringify({
+      _id: cardId
+    })
+  })
+    .then(res => res.json())
+}
+
+export function dislikeCard(cardId) {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: 'DELETE',
+    headers: config.headers,
+    body: JSON.stringify({
+      _id: cardId
+    })
+  })
+    .then(res => res.json())
+}
