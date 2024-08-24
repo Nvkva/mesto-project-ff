@@ -52,7 +52,6 @@ export function deleteCardRequest(cardId) {
       _id: cardId
     })
   })
-    .then(res => res.json())
 }
 
 export function likeCard(cardId) {
@@ -72,6 +71,17 @@ export function dislikeCard(cardId) {
     headers: config.headers,
     body: JSON.stringify({
       _id: cardId
+    })
+  })
+    .then(res => res.json())
+}
+
+export function newAvatar(avatar) {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({
+      avatar
     })
   })
     .then(res => res.json())

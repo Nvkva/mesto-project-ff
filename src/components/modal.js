@@ -1,11 +1,11 @@
 export function openDialog(dialog) {
   dialog.classList.add('popup_is-opened');
-  document.addEventListener('keydown', closeDialogByEsc); 
+  document.addEventListener('keydown', closeDialogByEsc);
 }
 
 export function closeDialog(dialog) {
   dialog.classList.remove('popup_is-opened');
-  document.removeEventListener('keydown', closeDialogByEsc); 
+  document.removeEventListener('keydown', closeDialogByEsc);
 }
 
 export function closeDialogByOverlay(event, dialog) {
@@ -19,4 +19,14 @@ export function closeDialogByEsc(event) {
     const openedPopup = document.querySelector('.popup_is-opened');
     closeDialog(openedPopup);
   }
+}
+
+export function openConfirmationDialog(dialog, callBackToExecute) {
+  openDialog(dialog);
+  dialog.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    closeDialog(dialog);
+    callBackToExecute();
+  }, { once: true });
 }

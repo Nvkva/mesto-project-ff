@@ -34,6 +34,9 @@ const imageTemplate = imageDialog.querySelector(".popup__image");
 const labelTemplate = imageDialog.querySelector(".popup__caption");
 const imageCloseButton = imageDialog.querySelector(".popup__close");
 
+const confirmationDialog = document.querySelector(".popup_confirmation");
+const confirmationCloseButton = confirmationDialog.querySelector(".popup__close");
+
 const popups = document.getElementsByClassName("popup");
 
 const formElement = document.querySelector('.popup__form');
@@ -82,7 +85,7 @@ function handleCreation(evt) {
 
   addNewCard(name, url)
     .then(res => {
-      const cardElement = createCard({ cardTemplate, cardData: res, deleteCard, likeCard, previewImage });
+      const cardElement = createCard({ confirmationDialog, cardTemplate, cardData: res, deleteCard, likeCard, previewImage });
       cardContent.prepend(cardElement);
 
       evt.target.reset();
@@ -93,7 +96,7 @@ function handleCreation(evt) {
 
 function initCards(cardsData) {
   cardsData.forEach(cardData => {
-    const cardElement = createCard({ userId: currentUserData._id, cardTemplate, cardData, deleteCard, likeCard, previewImage });
+    const cardElement = createCard({ confirmationDialog, userId: currentUserData._id, cardTemplate, cardData, deleteCard, likeCard, previewImage });
     cardContent.append(cardElement);
   });
 }
@@ -117,6 +120,10 @@ for (let item of popups) {
 
 imageCloseButton.addEventListener("click", () => closeDialog(imageDialog)); // Удаляем класс по нажатию на крестика
 imageDialog.addEventListener("click", (event) => closeDialogByOverlay(event, imageDialog)); // Удаляем класс по нажатию оверлей
+
+confirmationCloseButton.addEventListener("click", () => closeDialog(confirmationDialog)); // Удаляем класс по нажатию на крестика
+confirmationDialog.addEventListener("click", (event) => closeDialogByOverlay(event, confirmationDialog)); // Удаляем класс по нажатию оверлей
+
 
 // Событие нажатия на кнопку открытия модального окна редактирования
 editButton.addEventListener("click", function () {

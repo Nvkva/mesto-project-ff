@@ -1,4 +1,5 @@
 import { deleteCardRequest } from "./api";
+import { openConfirmationDialog } from "./modal";
 
 // @todo: Функция создания карточки
 export function createCard(createData) {
@@ -11,7 +12,8 @@ export function createCard(createData) {
 
   const deleteButton = cardElement.querySelector('.card__delete-button');
   deleteButton.addEventListener('click', () => {
-    createData.deleteCard(cardElement, createData.cardData._id);
+    const deleteRequest = () => createData.deleteCard(cardElement, createData.cardData._id);
+    openConfirmationDialog(createData.confirmationDialog, deleteRequest);
   });
 
   if (createData.cardData.owner._id === createData.userId) {
@@ -29,19 +31,6 @@ export function createCard(createData) {
 
   return cardElement;
 }
-
-const toggleButtonState = (buttonStateConfig) => {
-  // Если есть хотя бы один невалидный инпут
-  if (hasInvalidInput(buttonStateConfig.inputList)) {
-    // сделай кнопку неактивной
-    buttonStateConfig.buttonElement.disabled = true;
-    buttonStateConfig.buttonElement.classList.add(buttonStateConfig.inactiveButtonClass);
-  } else {
-    // иначе сделай кнопку активной
-    buttonStateConfig.buttonElement.disabled = false;
-    buttonStateConfig.buttonElement.classList.remove(buttonStateConfig.inactiveButtonClass);
-  }
-};
 
 // @todo: Функция удаления карточки
 export function deleteCard(cardTemplate, cardId) {
