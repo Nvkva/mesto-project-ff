@@ -76,7 +76,7 @@ export function dislikeCard(cardId) {
     .then(res => res.json())
 }
 
-export function newAvatar(avatar) {
+export function editAvatar(avatar) {
   return fetch(`${config.baseUrl}/users/me/avatar`, {
     method: 'PATCH',
     headers: config.headers,

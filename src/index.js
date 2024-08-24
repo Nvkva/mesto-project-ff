@@ -2,7 +2,7 @@ import './pages/index.css'
 import { createCard, deleteCard, likeCard } from './components/card.js';
 import { closeDialog, openDialog, closeDialogByOverlay } from './components/modal.js';
 import { clearValidationForForm, enableValidation } from './components/validation.js';
-import { addNewCard, editUser, getCards, getCurrentUser } from './components/api.js';
+import { addNewCard, editAvatar, editUser, getCards, getCurrentUser } from './components/api.js';
 
 let currentUserData;
 
@@ -27,7 +27,11 @@ const creationForm = document.forms["new-place"];
 
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
+
 const profileAvatar = document.querySelector(".profile__image");
+const editAvatarDialog = document.querySelector(".popup_type_edit-avatar"); // Модальное окно добавления карточки
+const editAvatarCloseButton = editAvatarDialog.querySelector(".popup__close"); // Нашли класс кнопки крестика
+const avatarForm = document.forms["edit-avatar"];
 
 const imageDialog = document.querySelector(".popup_type_image");
 const imageTemplate = imageDialog.querySelector(".popup__image");
@@ -38,10 +42,6 @@ const confirmationDialog = document.querySelector(".popup_confirmation");
 const confirmationCloseButton = confirmationDialog.querySelector(".popup__close");
 
 const popups = document.getElementsByClassName("popup");
-
-const formElement = document.querySelector('.popup__form');
-const formInput = formElement.querySelector('.popup__input');
-const formError = formElement.querySelector(`.${formInput.id}-error`);
 
 const validationConfig = {
   formSelector: '.popup__form',
@@ -94,6 +94,20 @@ function handleCreation(evt) {
     });
 }
 
+function handleAvatarEdit(evt) {
+  evt.preventDefault();
+
+  const createUrlInputValue = editAvatarDialog.querySelector(".popup__input_type_url").value;
+  editAvatar(createUrlInputValue)
+    .then(res => {
+      profileAvatar.style.backgroundImage = `url(${res.avatar})`;
+
+      evt.target.reset();
+
+      closeDialog(editAvatarDialog);
+    });
+}
+
 function initCards(cardsData) {
   cardsData.forEach(cardData => {
     const cardElement = createCard({ confirmationDialog, userId: currentUserData._id, cardTemplate, cardData, deleteCard, likeCard, previewImage });
@@ -118,14 +132,13 @@ for (let item of popups) {
   item.classList.add("popup_is-animated");
 }
 
-imageCloseButton.addEventListener("click", () => closeDialog(imageDialog)); // Удаляем класс по нажатию на крестика
-imageDialog.addEventListener("click", (event) => closeDialogByOverlay(event, imageDialog)); // Удаляем класс по нажатию оверлей
+imageCloseButton.addEventListener("click", () => closeDialog(imageDialog));
+imageDialog.addEventListener("click", (event) => closeDialogByOverlay(event, imageDialog));
 
-confirmationCloseButton.addEventListener("click", () => closeDialog(confirmationDialog)); // Удаляем класс по нажатию на крестика
-confirmationDialog.addEventListener("click", (event) => closeDialogByOverlay(event, confirmationDialog)); // Удаляем класс по нажатию оверлей
+confirmationCloseButton.addEventListener("click", () => closeDialog(confirmationDialog));
+confirmationDialog.addEventListener("click", (event) => closeDialogByOverlay(event, confirmationDialog));
 
 
-// Событие нажатия на кнопку открытия модального окна редактирования
 editButton.addEventListener("click", function () {
   clearValidationForForm(editingForm, validationConfig);
   openDialog(editDialog);
@@ -134,10 +147,9 @@ editButton.addEventListener("click", function () {
   editJobInput.value = profileDescription.textContent;
 });
 editingForm.addEventListener('submit', handleEditing);
-editDialogCloseButton.addEventListener("click", () => closeDialog(editDialog)); // Удаляем класс по нажатию на крестик
-editDialog.addEventListener("click", (event) => closeDialogByOverlay(event, editDialog)); // Удаляем класс по нажатию оверлей
+editDialogCloseButton.addEventListener("click", () => closeDialog(editDialog));
+editDialog.addEventListener("click", (event) => closeDialogByOverlay(event, editDialog));
 
-// Событие нажатия на кнопку открытия модального окна добавления карточки
 createCardButton.addEventListener("click", function () {
   creationForm.reset();
 
@@ -145,7 +157,17 @@ createCardButton.addEventListener("click", function () {
   openDialog(createCardDialog);
 });
 creationForm.addEventListener('submit', handleCreation);
-createCardCloseButton.addEventListener("click", () => closeDialog(createCardDialog)); // Удаляем класс по нажатию на крестик
-createCardDialog.addEventListener("click", (event) => closeDialogByOverlay(event, createCardDialog));  // Удаляем класс по нажатию оверлей
+createCardCloseButton.addEventListener("click", () => closeDialog(createCardDialog));
+createCardDialog.addEventListener("click", (event) => closeDialogByOverlay(event, createCardDialog)); 
+
+profileAvatar.addEventListener("click", function () {
+  avatarForm.reset();
+
+  clearValidationForForm(editAvatarDialog, validationConfig);
+  openDialog(editAvatarDialog);
+});
+avatarForm.addEventListener('submit', handleAvatarEdit);
+editAvatarCloseButton.addEventListener("click", () => closeDialog(editAvatarDialog));
+editAvatarDialog.addEventListener("click", (event) => closeDialogByOverlay(event, editAvatarDialog));
 
 enableValidation(validationConfig);
