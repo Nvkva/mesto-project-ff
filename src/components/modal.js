@@ -20,13 +20,3 @@ export function closeDialogByEsc(event) {
     closeDialog(openedPopup);
   }
 }
-
-export function openConfirmationDialog(dialog, callBackToExecute) {
-  openDialog(dialog);
-  dialog.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-
-    closeDialog(dialog);
-    callBackToExecute();
-  }, { once: true });
-}

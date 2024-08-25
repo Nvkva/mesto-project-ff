@@ -1,4 +1,3 @@
-import { checkResponse } from "../utils/check-response";
 import { request } from "../utils/request";
 
 const config = {

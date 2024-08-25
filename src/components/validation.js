@@ -1,3 +1,5 @@
+import { disableButton, enableButton } from "../utils/disable-button";
+
 export const enableValidation = (config) => {
   const formList = Array.from(document.querySelectorAll(config.formSelector));
 
@@ -41,8 +43,7 @@ export const enableValidation = (config) => {
 
 export const clearValidationForForm = (formElement, config) => {
   const buttonElement = formElement.querySelector(config.submitButtonSelector);
-  buttonElement.disabled = true;
-  buttonElement.classList.add(config.inactiveButtonClass);
+  disableButton(buttonElement, config.inactiveButtonClass);
 
   const inputList = Array.from(formElement.querySelectorAll(config.inputSelector));
   inputList.forEach((inputElement) => {
@@ -75,12 +76,10 @@ const toggleButtonState = (buttonStateConfig) => {
   // Если есть хотя бы один невалидный инпут
   if (hasInvalidInput(buttonStateConfig.inputList)) {
     // сделай кнопку неактивной
-    buttonStateConfig.buttonElement.disabled = true;
-    buttonStateConfig.buttonElement.classList.add(buttonStateConfig.inactiveButtonClass);
+    disableButton(buttonStateConfig.buttonElement, buttonStateConfig.inactiveButtonClass)
   } else {
     // иначе сделай кнопку активной
-    buttonStateConfig.buttonElement.disabled = false;
-    buttonStateConfig.buttonElement.classList.remove(buttonStateConfig.inactiveButtonClass);
+    enableButton(buttonStateConfig.buttonElement, buttonStateConfig.inactiveButtonClass)
   }
 };
 

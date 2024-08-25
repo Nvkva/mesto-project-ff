@@ -29,6 +29,8 @@ const createCardDialog = document.querySelector(".popup_type_new-card"); // Мо
 const createCardCloseButton = createCardDialog.querySelector(".popup__close"); // Нашли класс кнопки крестика
 const creationForm = document.forms["new-place"];
 const createSubmitButton = createCardDialog.querySelector(".popup__button");
+const createUrlInput = createCardDialog.querySelector(".popup__input_type_url");
+const createNameInput = createCardDialog.querySelector(".popup__input_type_card-name");
 
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
@@ -38,6 +40,7 @@ const editAvatarDialog = document.querySelector(".popup_type_edit-avatar"); // �
 const editAvatarCloseButton = editAvatarDialog.querySelector(".popup__close"); // Нашли класс кнопки крестика
 const avatarForm = document.forms["edit-avatar"];
 const editAvatarSubmitButton = editAvatarDialog.querySelector(".popup__button");
+const editAvatarUrlInput = editAvatarDialog.querySelector(".popup__input_type_url");
 
 const imageDialog = document.querySelector(".popup_type_image");
 const imageTemplate = imageDialog.querySelector(".popup__image");
@@ -59,6 +62,16 @@ const validationConfig = {
   errorClass: 'form__input-error_active'
 };
 
+export function openConfirmationDialog(callBackToExecute) {
+  openDialog(confirmationDialog);
+  confirmationDialog.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    closeDialog(confirmationDialog);
+    callBackToExecute();
+  }, { once: true });
+}
+
 export function previewImage(cardData) {
   openDialog(imageDialog);
 
@@ -67,7 +80,7 @@ export function previewImage(cardData) {
   labelTemplate.textContent = cardData.name
 }
 
-function handleEditing(evt) {
+function handleProfileFormSubmit(evt) {
   evt.preventDefault();
 
   const name = editNameInput.value;
@@ -81,20 +94,18 @@ function handleEditing(evt) {
       profileTitle.textContent = name;
       profileDescription.textContent = job;
 
-      editSubmitButton.textContent = DEFAULT_SUBMIT_LABEL;
-
       closeDialog(editDialog);
     })
     .catch((err) => {
       console.log(err);
+    })
+    .finally(() => {
       editSubmitButton.textContent = DEFAULT_SUBMIT_LABEL;
     });
 }
 
-function handleCreation(evt) {
+function handleCreationCard(evt) {
   evt.preventDefault();
-  const createUrlInput = createCardDialog.querySelector(".popup__input_type_url");
-  const createNameInput = createCardDialog.querySelector(".popup__input_type_card-name");
   const name = createNameInput.value;
   const url = createUrlInput.value;
 
@@ -107,12 +118,12 @@ function handleCreation(evt) {
 
       evt.target.reset();
 
-      createSubmitButton.textContent = DEFAULT_SUBMIT_LABEL;
-
       closeDialog(createCardDialog);
     })
     .catch((err) => {
       console.log(err);
+    })
+    .finally(() => {
       createSubmitButton.textContent = DEFAULT_SUBMIT_LABEL;
     });
 }
@@ -120,21 +131,22 @@ function handleCreation(evt) {
 function handleAvatarEdit(evt) {
   evt.preventDefault();
 
+  const urlValue = editAvatarUrlInput.value;
+
   editAvatarSubmitButton.textContent = DEFAULT_SUBMIT_PROGRESS_LABEL;
 
-  const createUrlInputValue = editAvatarDialog.querySelector(".popup__input_type_url").value;
-  editAvatar(createUrlInputValue)
+  editAvatar(urlValue)
     .then(res => {
       profileAvatar.style.backgroundImage = `url(${res.avatar})`;
 
       evt.target.reset();
 
-      editAvatarSubmitButton.textContent = DEFAULT_SUBMIT_LABEL;
-
       closeDialog(editAvatarDialog);
     })
     .catch((err) => {
       console.log(err);
+    })
+    .finally(() => {
       editAvatarSubmitButton.textContent = DEFAULT_SUBMIT_LABEL;
     });
 }
@@ -180,7 +192,7 @@ editButton.addEventListener("click", function () {
   editNameInput.value = profileTitle.textContent;
   editJobInput.value = profileDescription.textContent;
 });
-editingForm.addEventListener('submit', handleEditing);
+editingForm.addEventListener('submit', handleProfileFormSubmit);
 editDialogCloseButton.addEventListener("click", () => closeDialog(editDialog));
 editDialog.addEventListener("click", (event) => closeDialogByOverlay(event, editDialog));
 
@@ -190,7 +202,7 @@ createCardButton.addEventListener("click", function () {
   clearValidationForForm(creationForm, validationConfig);
   openDialog(createCardDialog);
 });
-creationForm.addEventListener('submit', handleCreation);
+creationForm.addEventListener('submit', handleCreationCard);
 createCardCloseButton.addEventListener("click", () => closeDialog(createCardDialog));
 createCardDialog.addEventListener("click", (event) => closeDialogByOverlay(event, createCardDialog));
 

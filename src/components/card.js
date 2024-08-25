@@ -1,5 +1,5 @@
+import { openConfirmationDialog } from "..";
 import { deleteCardRequest, dislikeCard, dislikeCardRequest, likeCardRequest } from "./api";
-import { openConfirmationDialog } from "./modal";
 
 // @todo: Функция создания карточки
 export function createCard(createData) {
@@ -14,7 +14,7 @@ export function createCard(createData) {
   const deleteButton = cardElement.querySelector('.card__delete-button');
   deleteButton.addEventListener('click', () => {
     const deleteRequest = () => createData.deleteCard(cardElement, createData.cardData._id);
-    openConfirmationDialog(createData.confirmationDialog, deleteRequest);
+    openConfirmationDialog(deleteRequest);
   });
 
   if (createData.cardData.owner._id === createData.userId) {
