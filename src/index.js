@@ -64,12 +64,15 @@ const validationConfig = {
 
 export function openConfirmationDialog(callBackToExecute) {
   openDialog(confirmationDialog);
-  confirmationDialog.addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  const confirmationRequest = (evt) => handleConfirmationRequest(evt, callBackToExecute);
+  confirmationDialog.addEventListener('submit', confirmationRequest);
+}
 
-    closeDialog(confirmationDialog);
-    callBackToExecute();
-  }, { once: true });
+function handleConfirmationRequest(evt, callBackToExecute) {
+  evt.preventDefault();
+
+  closeDialog(confirmationDialog);
+  callBackToExecute();
 }
 
 export function previewImage(cardData) {

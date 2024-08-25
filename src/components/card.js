@@ -1,5 +1,5 @@
 import { openConfirmationDialog } from "..";
-import { deleteCardRequest, dislikeCard, dislikeCardRequest, likeCardRequest } from "./api";
+import { deleteCardRequest, dislikeCardRequest, likeCardRequest } from "./api";
 
 // @todo: Функция создания карточки
 export function createCard(createData) {
