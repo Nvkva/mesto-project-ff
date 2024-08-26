@@ -62,14 +62,17 @@ const validationConfig = {
   errorClass: 'form__input-error_active'
 };
 
-export function openConfirmationDialog(callBackToExecute) {
-  openDialog(confirmationDialog);
-  const confirmationRequest = (evt) => handleConfirmationRequest(evt, callBackToExecute);
-  confirmationDialog.addEventListener('submit', confirmationRequest);
-}
+let callBackToExecute;
 
-function handleConfirmationRequest(evt, callBackToExecute) {
+export function openConfirmationDialog(cbToExecute) {
+  openDialog(confirmationDialog);
+  callBackToExecute = cbToExecute;
+}
+confirmationDialog.addEventListener('submit', handleConfirmationRequest);
+
+function handleConfirmationRequest(evt) {
   evt.preventDefault();
+
   callBackToExecute()
     .then(() => {
       closeDialog(confirmationDialog);
