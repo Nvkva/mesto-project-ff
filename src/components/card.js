@@ -38,7 +38,7 @@ export function createCard(createData) {
 
 // @todo: Функция удаления карточки
 export function deleteCard(cardTemplate, cardId) {
-  deleteCardRequest(cardId)
+  return deleteCardRequest(cardId)
     .then(() => {
       cardTemplate.remove();
     })

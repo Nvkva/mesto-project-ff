@@ -70,9 +70,10 @@ export function openConfirmationDialog(callBackToExecute) {
 
 function handleConfirmationRequest(evt, callBackToExecute) {
   evt.preventDefault();
-
-  closeDialog(confirmationDialog);
-  callBackToExecute();
+  callBackToExecute()
+    .then(() => {
+      closeDialog(confirmationDialog);
+    });
 }
 
 export function previewImage(cardData) {
